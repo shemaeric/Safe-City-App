@@ -9,11 +9,11 @@ export default class Initializing extends Component {
     this.loading()
   }
 
-  loading = async() => {
-    const userToken = AsyncStorage.getItem('userToken');
+  loading = async () => {
+    const userToken = await AsyncStorage.getItem('userToken');
     console.log(userToken);
 
-    this.props.navigation.navigate(userToken ? 'SignUp': 'Home')
+    this.props.navigation.navigate(userToken === null ? 'SignUp': 'Home')
   }
   render() {
     return (

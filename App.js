@@ -1,16 +1,28 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator, createAppContainer, createSwitchNavigator, createMaterialTopTabNavigator} from 'react-navigation';
+import { toast } from 'react-toastify';
 import HomeScreen from './src/components/home';
 import SignUpScreen from './src/components/SignUp';
 import Initializing from './src/components/Initializing';
 import ValidateScreen from './src/components/Validate';
-import Item from './src/components/Item';
+import Fire from './src/components/fire';
+import Abuse from './src/components/abuse';
+import Accident from './src/components/accident';
+import { Provider } from 'react-redux';
+import store from './src/redux/store';
+
+toast.configure({
+  autoClose: 5000,
+  draggable: false,
+});
 
 export default class App extends React.Component {
   render() {
     return (
+      <Provider store={store}>
         <AppStackNavigator></AppStackNavigator>
+      </Provider>
     );
   }
 }
@@ -22,12 +34,14 @@ const AuthStackNavigator = createStackNavigator({
 
 const ItemStackNavigation = createStackNavigator({
   Home: HomeScreen,
-  Item
+  Fire,
+  Abuse,
+  Accident
 })
 const TabNavigator = createMaterialTopTabNavigator({
-  Fire: { screen: Item },
-  Abuse: { screen: Item },
-  Accident: { screen: Item }
+  Fire: { screen: Fire },
+  Abuse: { screen: Abuse },
+  Accident: { screen: Accident }
 },{tabBarOptions: {
   labelStyle: {
     fontSize: 13,

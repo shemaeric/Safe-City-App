@@ -1,28 +1,32 @@
 // SignUp.js
 import React from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
-
+import { connect } from 'react-redux';
 import styles from "../styles/home";
 import Navbar from "../components/containers/Navbar";
+import { userRegister, test } from '../redux/action-creators/user';
 
-export default class SignUp extends React.Component {
+class SignUp extends React.Component {
   state = {
-    username: "",
-    password: "",
-    email: "",
-    phone_number: ""
+    first_name: "",
+    last_name: "",
+    my_phone_number: "",
+    referee_phone_number: ""
   };
   onChangeText = (key, val) => {
     this.setState({ [key]: val });
   };
-  signUp = async () => {
-    const { username, password, email, phone_number } = this.state;
-    try {
-      // here place your signup logic
-      console.log("user successfully signed up!: ", success);
-    } catch (err) {
-      console.log("error signing up: ", err);
-    }
+
+  componentDidMount() {
+    this.props.test();
+  }
+  userSign = async (user) => {
+    this.props.register(user).then(res => {
+      if(res.payload.data.status === 400) {
+        return null
+      }
+      this.props.navigation.navigate('Validate')
+    })
   };
 
   static navigationOptions = {
@@ -31,44 +35,44 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Navbar name="Safe city" />
+        <Navbar name="Emergency App" />
         <View style={styles.body}>
           <Navbar name="Sign Up" />
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              placeholder="Username..."
+              placeholder="First Name..."
               autoCapitalize="none"
               placeholderTextColor={"#9E9E9E"}
-              onChangeText={val => this.onChangeText("username", val)}
+              onChangeText={val => this.onChangeText("first_name", val)}
             />
             <TextInput
               style={styles.input}
-              placeholder="Email..."
+              placeholder="Last Name..."
               autoCapitalize="none"
               placeholderTextColor={"#9E9E9E"}
-              onChangeText={val => this.onChangeText("email", val)}
+              onChangeText={val => this.onChangeText("last_name", val)}
             />
             <TextInput
               style={styles.input}
               placeholder="Phone Number..."
               autoCapitalize="none"
               placeholderTextColor={"#9E9E9E"}
-              onChangeText={val => this.onChangeText("phone_number", val)}
+              onChangeText={val => this.onChangeText("my_phone_number", val)}
             />
             <TextInput
               style={styles.input}
               placeholder="Referee Phone Number..."
               autoCapitalize="none"
               placeholderTextColor={"#9E9E9E"}
-              onChangeText={val => this.onChangeText("ref_phone_number", val)}
+              onChangeText={val => this.onChangeText("referee_phone_number", val)}
             />
             <View style={styles.buttonSignupContainer}>
               <View style={styles.customBtn}>
                 <Button
                   title="Sign Up"
                   color="black"
-                  onPress={() => this.props.navigation.navigate("Validate")}
+                  onPress={() => this.userSign(this.state)}
                 />
               </View>
             </View>
@@ -78,3 +82,9 @@ export default class SignUp extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  regUser : state.user.user
+});
+
+export default connect(mapStateToProps, {register: userRegister, test})(SignUp)
